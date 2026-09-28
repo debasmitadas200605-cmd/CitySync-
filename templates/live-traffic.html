@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="manifest" href="/static/manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Live Traffic</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  background:#020b1d;
+  overflow:hidden;
+  color:white;
+}
+
+/* MAP */
+
+#map{
+  height:100vh;
+  width:100%;
+}
+
+/* TOP BAR */
+
+.topbar{
+
+  position:absolute;
+
+  top:20px;
+  left:20px;
+  right:20px;
+
+  z-index:10;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  gap:20px;
+}
+
+/* BACK BUTTON */
+
+.back-btn{
+    
+  background:
+  linear-gradient(
+      135deg,
+      #61f28c,
+      #3ecf6d
+  );
+
+  color:rgba(25,35,65,0.95);
+
+  padding:14px 22px;
+
+  border-radius:18px;
+
+  text-decoration:none;
+
+  font-weight:600;
+
+  box-shadow:
+  0 10px 30px rgba(97,242,140,0.25);
+
+  transition:0.3s ease;
+}
+
+.back-btn:hover{
+
+  transform:translateY(-3px);
+}
+
+/* LIVE STATUS CARD */
+
+.live-card{
+
+  background:
+  linear-gradient(
+      145deg,
+      rgba(17,25,48,0.92),
+      rgba(25,35,65,0.95)
+  );
+
+  backdrop-filter:blur(18px);
+
+  border:
+  1px solid rgba(255,255,255,0.05);
+
+  border-radius:24px;
+
+  padding:18px 24px;
+
+  display:flex;
+  align-items:center;
+  gap:20px;
+
+  box-shadow:
+  0 0 35px rgba(0,0,0,0.35);
+}
+
+/* LIVE DOT */
+
+.live-dot{
+
+  width:14px;
+  height:14px;
+
+  background:#61f28c;
+
+  border-radius:50%;
+
+  box-shadow:
+  0 0 15px #61f28c;
+
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+
+  0%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+  50%{
+    transform:scale(1.4);
+    opacity:0.5;
+  }
+
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+
+/* INFO */
+
+.live-info h2{
+
+  font-size:20px;
+  margin-bottom:4px;
+}
+
+.live-info p{
+
+  color:#b7c3e0;
+  font-size:14px;
+}
+
+/* TRAFFIC LEGEND */
+
+.legend{
+
+  position:absolute;
+
+  bottom:25px;
+  left:25px;
+
+  z-index:10;
+
+  background:
+  linear-gradient(
+      145deg,
+      rgba(17,25,48,0.92),
+      rgba(25,35,65,0.95)
+  );
+
+  border-radius:24px;
+
+  padding:18px 20px;
+
+  width:240px;
+
+  border:
+  1px solid rgba(255,255,255,0.05);
+
+  backdrop-filter:blur(18px);
+
+  box-shadow:
+  0 0 35px rgba(0,0,0,0.35);
+}
+
+.legend h3{
+
+  margin-bottom:16px;
+  font-size:18px;
+}
+
+.legend-item{
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  margin-bottom:14px;
+}
+
+.legend-color{
+
+  width:18px;
+  height:18px;
+
+  border-radius:50%;
+}
+
+.green{
+  background:#61f28c;
+}
+
+.yellow{
+  background:#ffd028;
+}
+
+.orange{
+  background:#ff9b3d;
+}
+
+.red{
+  background:#ff5c5c;
+}
+
+.legend span{
+
+  color:#dbe4ff;
+  font-size:14px;
+}
+
+/* MAP OVERLAY */
+
+.overlay{
+
+  position:absolute;
+
+  inset:0;
+
+  pointer-events:none;
+
+  background:
+  radial-gradient(
+      circle at top,
+      rgba(255,255,255,0.05),
+      transparent 60%
+  );
+}
+
+/* MAP CONTROLS */
+
+.map-controls{
+
+  position:absolute;
+
+  top:110px;
+  right:20px;
+
+  z-index:10;
+
+  display:flex;
+  flex-direction:column;
+
+  gap:12px;
+}
+
+.map-controls button{
+
+  background:
+  linear-gradient(
+      145deg,
+      rgba(17,25,48,0.92),
+      rgba(25,35,65,0.95)
+  );
+
+  color:white;
+
+  border:
+  1px solid rgba(255,255,255,0.05);
+
+  padding:14px 18px;
+
+  border-radius:18px;
+
+  cursor:pointer;
+
+  font-weight:600;
+
+  backdrop-filter:blur(18px);
+
+  transition:0.3s ease;
+
+  box-shadow:
+  0 0 20px rgba(0,0,0,0.25);
+}
+
+.map-controls button:hover{
+
+  transform:translateY(-3px);
+
+  background:
+  linear-gradient(
+      145deg,
+      rgba(97,242,140,0.18),
+      rgba(25,35,65,0.95)
+  );
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="overlay"></div>
+
+<div class="topbar">
+
+    <a href="/" class="back-btn">
+        Back Dashboard
+    </a>
+
+    <div class="live-card">
+
+        <div class="live-dot"></div>
+
+        <div class="live-info">
+
+            <h2 style="font-size:16px;">
+                Live Traffic
+            </h2>
+
+            <p style="font-size:11px;">
+            Real-time Kolkata congestion
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="map-controls">
+
+    <button onclick="setMapType('roadmap')">
+        🗺 Roadmap
+    </button>
+
+    <button onclick="setMapType('satellite')">
+        🛰 Satellite
+    </button>
+
+    <button onclick="setMapType('hybrid')">
+        🌍 Hybrid
+    </button>
+
+    <button onclick="setMapType('terrain')">
+        ⛰ Terrain
+    </button>
+
+</div>
+
+<div class="legend">
+
+    <h3>Traffic Density</h3>
+
+    <div class="legend-item">
+
+        <div class="legend-color green"></div>
+        <span>Low Traffic</span>
+
+    </div>
+
+    <div class="legend-item">
+
+        <div class="legend-color yellow"></div>
+        <span>Moderate Traffic</span>
+
+    </div>
+
+    <div class="legend-item">
+
+        <div class="legend-color orange"></div>
+        <span>Heavy Traffic</span>
+
+    </div>
+
+    <div class="legend-item">
+
+        <div class="legend-color red"></div>
+        <span>Severe Congestion</span>
+
+    </div>
+
+</div>
+
+<div id="map"></div>
+
+<script>
+
+let map;
+
+function initMap() {
+
+    const kolkata = {
+        lat: 22.5726,
+        lng: 88.3639
+    };
+
+    map = new google.maps.Map(
+        document.getElementById("map"),
+        {
+
+            center: kolkata,
+
+            zoom: 12,
+
+            disableDefaultUI: true,
+
+            gestureHandling:"greedy",
+
+            styles: [
+
+                {
+                    elementType: "geometry",
+                    stylers: [{ color: "#121a2f" }]
+                },
+
+                {
+                    elementType: "labels.text.fill",
+                    stylers: [{ color: "#dbe4ff" }]
+                },
+
+                {
+                    elementType: "labels.text.stroke",
+                    stylers: [{ color: "#121a2f" }]
+                },
+
+                {
+                    featureType: "road",
+                    elementType: "geometry",
+                    stylers: [{ color: "#25345b" }]
+                },
+
+                {
+                    featureType: "road.highway",
+                    elementType: "geometry",
+                    stylers: [{ color: "#2a3754" }]
+                },
+
+                {
+                    featureType: "road.highway",
+                    elementType: "labels",
+                    stylers: [{ visibility: "off" }]
+                },
+
+                {
+                    featureType: "water",
+                    elementType: "geometry",
+                    stylers: [{ color: "#1f4e79" }]
+                },
+
+                {
+                    featureType: "poi.business",
+                    stylers: [{ visibility: "off" }]
+                }
+
+            ]
+
+        }
+    );
+
+    const trafficLayer =
+        new google.maps.TrafficLayer();
+
+    trafficLayer.setMap(map);
+
+}
+
+function setMapType(type){
+
+    map.setMapTypeId(type);
+
+}
+
+</script>
+
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChGC9_MvP_APQdgzdAaDr1SREj9RvGckQ&callback=initMap">
+</script>
+<script>
+
+if ('serviceWorker' in navigator) {
+
+    navigator.serviceWorker.register('/static/sw.js');
+
+}
+
+</script>
+</body>
+</html>

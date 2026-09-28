@@ -1,0 +1,15 @@
+{
+  "name": "CitySync AI",
+  "short_name": "CitySync",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020b1d",
+  "theme_color": "#61f28c",
+  "icons": [
+    {
+      "src": "/static/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

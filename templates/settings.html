@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="manifest" href="/static/manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Settings</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script>
+
+/* LOAD SAVED THEME */
+
+if (localStorage.getItem("theme") === "light") {
+
+    document.documentElement.classList.add("light");
+
+}
+
+</script>
+
+<style>
+
+/* =========================
+   THEME VARIABLES
+========================= */
+
+:root {
+
+  --bg:#020b1d;
+
+  --card:
+  linear-gradient(
+      145deg,
+      rgba(17,25,48,0.92),
+      rgba(25,35,65,0.95)
+  );
+
+  --text:#ffffff;
+
+  --subtext:#b7c3e0;
+
+  --accent:#61f28c;
+
+  --border:
+  rgba(255,255,255,0.05);
+
+  --shadow:
+  0 0 35px rgba(0,0,0,0.35);
+}
+
+/* LIGHT MODE */
+
+.light {
+
+  --bg:#eef4ff;
+
+  --card:
+  linear-gradient(
+      145deg,
+      rgba(255,255,255,0.95),
+      rgba(235,242,255,0.92)
+  );
+
+  --text:#1e293b;
+
+  --subtext:#475569;
+
+  --accent:#3ecf6d;
+
+  --border:
+  rgba(15,23,42,0.08);
+
+  --shadow:
+  0 0 35px rgba(0,0,0,0.08);
+}
+
+/* =========================
+   GLOBAL
+========================= */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body {
+
+  background:var(--bg);
+
+  color:var(--text);
+
+  height:100vh;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  overflow:hidden;
+
+  transition:0.4s ease;
+}
+
+/* BACKGROUND GLOW */
+
+body::before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  background:
+  radial-gradient(
+      circle at top,
+      rgba(97,242,140,0.08),
+      transparent 60%
+  );
+
+  pointer-events:none;
+}
+
+/* =========================
+   SETTINGS CARD
+========================= */
+
+.container {
+
+  position:relative;
+
+  width:400px;
+
+  padding:36px;
+
+  border-radius:28px;
+
+  background:var(--card);
+
+  border:
+  1px solid var(--border);
+
+  backdrop-filter:blur(18px);
+
+  box-shadow:var(--shadow);
+
+  text-align:center;
+
+  z-index:2;
+}
+
+/* TITLE */
+
+h1{
+
+  font-size:34px;
+
+  margin-bottom:10px;
+}
+
+.subtitle{
+
+  color:var(--subtext);
+
+  font-size:14px;
+
+  margin-bottom:30px;
+}
+
+/* BUTTONS */
+
+button{
+
+  width:100%;
+
+  padding:16px;
+
+  border:none;
+
+  border-radius:18px;
+
+  background:
+  linear-gradient(
+      135deg,
+      var(--accent),
+      #3ecf6d
+  );
+
+  color:white;
+
+  font-size:16px;
+
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:0.3s ease;
+
+  box-shadow:
+  0 10px 30px rgba(97,242,140,0.25);
+}
+
+button:hover{
+
+  transform:translateY(-3px);
+}
+
+/* BACK BUTTON */
+
+.back{
+
+  margin-top:22px;
+
+  display:inline-block;
+
+  text-decoration:none;
+
+  color:var(--text);
+
+  font-weight:500;
+
+  transition:0.3s ease;
+}
+
+.back:hover{
+
+  opacity:0.7;
+}
+
+/* THEME STATUS */
+
+.theme-status{
+
+  margin-top:22px;
+
+  padding:14px;
+
+  border-radius:16px;
+
+  background:
+  rgba(255,255,255,0.04);
+
+  color:var(--subtext);
+
+  font-size:14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>⚙️ Settings</h1>
+
+    <p class="subtitle">
+        Personalize your CitySync dashboard
+    </p>
+
+    <button onclick="toggleTheme()">
+
+        🌗 Toggle Day / Night Mode
+
+    </button>
+
+    <div class="theme-status" id="themeStatus">
+
+        Current Theme:
+        Dark Mode
+
+    </div>
+
+    <a href="/" class="back">
+
+        ⬅ Back to Dashboard
+
+    </a>
+
+</div>
+
+<script>
+
+/* =========================
+   APPLY THEME TO ALL PAGES
+========================= */
+
+function applyTheme() {
+
+    const currentTheme =
+        localStorage.getItem("theme");
+
+    if(currentTheme === "light"){
+
+        document.documentElement
+        .classList.add("light");
+
+        document.getElementById(
+            "themeStatus"
+        ).innerHTML =
+        "Current Theme: Light Mode ☀️";
+
+    } else {
+
+        document.documentElement
+        .classList.remove("light");
+
+        document.getElementById(
+            "themeStatus"
+        ).innerHTML =
+        "Current Theme: Dark Mode 🌙";
+    }
+
+}
+
+/* =========================
+   TOGGLE THEME
+========================= */
+
+function toggleTheme() {
+
+    document.documentElement
+    .classList.toggle("light");
+
+    if (
+        document.documentElement
+        .classList.contains("light")
+    ) {
+
+        localStorage.setItem(
+            "theme",
+            "light"
+        );
+
+    } else {
+
+        localStorage.setItem(
+            "theme",
+            "dark"
+        );
+    }
+
+    applyTheme();
+}
+
+/* INITIAL LOAD */
+
+applyTheme();
+
+</script>
+<script>
+
+if ('serviceWorker' in navigator) {
+
+    navigator.serviceWorker.register('/static/sw.js');
+
+}
+
+</script>
+</body>
+</html>

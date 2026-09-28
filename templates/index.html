@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<link rel="manifest" href="/static/manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CitySync AI</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="logo">
+            CitySync
+        </div>
+
+        <div class="menu">
+
+            <a href="/" class="active">
+                Dashboard
+            </a>
+
+            <a href="/live-traffic">
+                Live Traffic
+            </a>
+
+            <a href="/settings">
+                Settings
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN -->
+
+    <div class="main">
+
+        <div class="top-section">
+
+            <div class="heading">
+
+                <h1>
+                    AI Traffic Management System
+                </h1>
+
+                <p>
+                    Real-time monitoring and smart route optimization
+                </p>
+
+                <div class="system-status">
+                    🟢 AI Grid Online • Live Monitoring Active
+                </div>
+
+            </div>
+
+            <!-- SEARCH -->
+
+            <div class="route-box">
+
+                <input
+                    id="from"
+                    type="text"
+                    font-size="26px"
+                    placeholder="Start location"
+                >
+
+                <input
+                    id="to"
+                    type="text"
+                    font-size="26px"
+                    placeholder="Destination"
+                >
+
+                <button onclick="getRoutes()">
+                    Find Best Route
+                </button>
+
+                <button onclick="findParking()">
+                    Find Parking
+                </button>
+
+                <button onclick="toggleTraffic()"
+                id="trafficBtn">
+                    Hide Traffic
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- CONTENT -->
+
+        <div class="content">
+
+            <!-- LEFT -->
+
+            <div class="left-column">
+
+                <div class="card">
+
+                    <h2>
+                        🌍 Live City Map
+                    </h2>
+
+                    <div id="map"></div>
+
+                    <div id="routePanel"></div>
+
+                </div>
+
+                <!-- ANALYTICS -->
+
+                <div class="analytics">
+
+                    <div class="card">
+
+                        <h2>
+                            📈 Traffic Flow Analytics
+                        </h2>
+
+                        <canvas id="trafficChart"></canvas>
+
+                    </div>
+
+                    <div class="card recommendations">
+
+                        <h2>
+                            🤖 AI Recommendations
+                        </h2>
+
+                        <ul id="recommendationList">
+
+                            <li>
+                                Search routes to generate AI recommendations
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+
+            <div class="right-column">
+
+                <div class="stat low">
+
+                    <h3>
+                        Traffic Status
+                    </h3>
+
+                    <h1 id="trafficStatus">
+                        Low
+                    </h1>
+
+                </div>
+
+                <div class="stat medium">
+
+                    <h3>
+                        Active Incidents
+                    </h3>
+
+                    <h1 id="incidentCount">
+                        0
+                    </h1>
+
+                </div>
+
+                <div class="stat busy">
+
+                    <h3>
+                        Signal Efficiency
+                    </h3>
+
+                    <h1 id="signalEfficiency">
+                        0%
+                    </h1>
+
+                </div>
+
+                <div class="stat heavy">
+
+                    <h3>
+                        Avg Travel Time
+                    </h3>
+
+                    <h1 id="avgTime">
+                        0 min
+                    </h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script
+src="{{ url_for('static', filename='script.js') }}">
+</script>
+
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyChGC9_MvP_APQdgzdAaDr1SREj9RvGckQ&libraries=places&callback=initMap">
+</script>
+<script>
+
+if ('serviceWorker' in navigator) {
+
+    navigator.serviceWorker.register('/static/sw.js');
+
+}
+
+</script>
+</body>
+</html>
